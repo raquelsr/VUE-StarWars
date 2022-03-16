@@ -23,6 +23,19 @@
           @pagination="updatePage"
           :page.sync="page"
         >
+          <template v-slot:[`item.planetName`]="{ item }">
+            <v-btn
+              color="blue-grey"
+              class="ma-2 white--text"
+              outlined
+              @click="clickPlanet(item.homeworld)"
+              x-small
+            >
+              {{ item.planetName }}
+
+              <v-icon right dark> mdi-open-in-new</v-icon>
+            </v-btn>
+          </template>
         </v-data-table>
       </v-card>
     </v-app>
@@ -97,6 +110,11 @@ export default {
           callback(...args);
         }, wait);
       };
+    },
+
+    clickPlanet(planet) {
+      console.log('Clicked', planet);
+      this.$emit('onClickPlanet', planet);
     },
   },
 };

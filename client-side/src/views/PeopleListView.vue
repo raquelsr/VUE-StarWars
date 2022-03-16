@@ -1,12 +1,19 @@
 <template>
   <div>
     <h1>People</h1>
+    <DialogComponent
+      :title="planetDialog.name"
+      :info="planetDialog"
+      :showDialog="showDialog"
+      v-model="showDialog"
+    />
     <DataTable
       title="People"
       :headers="headers"
       @onLoad="getPeople"
       :data="peopleList"
       :serverItems="serverItems"
+      @onClickPlanet="showPlanetInfo"
     />
   </div>
 </template>
@@ -14,6 +21,7 @@
 import DataTable from '@/components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
 import { HttpService } from '@/services/HttpService.js';
+import DialogComponent from '@/components/DialogComponent.vue';
 
 export default {
   name: 'PeopleListView',
@@ -22,16 +30,19 @@ export default {
     serverItems: 10,
     headers: [
       { text: 'Name', value: 'name', align: 'start' },
-      { text: 'Height', value: 'height' },
-      { text: 'Mass', value: 'mass' },
+      { text: 'Height (cm)', value: 'height' },
+      { text: 'Mass (kg)', value: 'mass' },
       { text: 'Created', value: 'created' },
       { text: 'Edited', value: 'edited' },
       { text: 'Planet name', value: 'planetName' },
     ],
+    showDialog: false,
+    planetDialog: {},
   }),
 
   components: {
     DataTable,
+    DialogComponent,
   },
 
   methods: {
@@ -56,6 +67,19 @@ export default {
         person.edited = new Date(person.edited).toDateString();
       }
       return people;
+    },
+
+    async showPlanetInfo(planet) {
+      const res = await fetch(planet);
+      const planetInfo = await res.json();
+      console.log(planetInfo);
+      this.showDialog = true;
+      this.planetDialog = {
+        name: planetInfo.name,
+        diameter: planetInfo.diameter,
+        climate: planetInfo.climate,
+        population: planetInfo.population,
+      };
     },
   },
 };
