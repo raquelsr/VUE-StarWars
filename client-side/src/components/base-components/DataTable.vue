@@ -3,25 +3,25 @@
     <v-app>
       <v-card>
         <v-card-title>
-          People
+          {{ title }}
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
             single-line
-            hide-details
           ></v-text-field>
         </v-card-title>
         <v-data-table
-          :footer-props="footerProps"
           :headers="headers"
           :items="data"
           :loading="loading"
           :options.sync="options"
           :server-items-length="serverItems"
-          @pagination="updatePage"
+          :footer-props="footerProps"
           :search="search"
+          @pagination="updatePage"
+          :page.sync="page"
         >
         </v-data-table>
       </v-card>
@@ -30,36 +30,37 @@
 </template>
 
 <script>
-import { HttpService } from '@/services/HttpService.js';
-
 export default {
   name: 'DataTable',
-  props: ['request', 'headers', 'dataHandled'],
+  props: {
+    title: String,
+    headers: Array,
+    data: Array,
+    serverItems: Number,
+  },
   data: () => ({
-    serverItems: 0,
+    loading: false,
     footerProps: {
       itemsPerPageOptions: [10],
       showFirstLastPage: true,
       showCurrentPage: true,
     },
-    loading: false,
     options: {
-      page: 1,
-      itemsPerPage: 10,
+      // TODO
       sortBy: ['name'],
       sortDesc: [true],
     },
     pagination: {},
-    data: [],
+    page: 1,
     search: '',
   }),
-  watch: {
-    dataHandled: function () {
-      this.data = this.dataHandled.results;
-    },
 
+  watch: {
     search: function () {
-      this.getData();
+      this.debounce(() => {
+        this.page = 1;
+        this.getData();
+      })();
     },
   },
 
@@ -67,26 +68,35 @@ export default {
     async getData(page = 1) {
       this.loading = true;
       try {
-        // eslint-disable-next-line
-        const data = await HttpService.executeRequest(
-          this.request,
+        await this.$emit(
+          'onLoad',
           page,
-          this.search
+          this.search,
+          () => (this.loading = false)
         );
-        await this.$emit('onHandleData', data);
-        const data2 = this.dataHandled;
-        this.data = data2.results;
-        this.serverItems = data2.count;
-        this.loading = false;
       } catch (error) {
         this.loading = false;
         console.error(error);
       }
     },
+
     updatePage(pagination) {
-      const { page } = pagination;
-      this.pagination = pagination;
-      this.getData(page);
+      console.log();
+      if (this.pagination.page != pagination.page) {
+        const { page } = pagination;
+        this.pagination = pagination;
+        this.getData(page);
+      }
+    },
+
+    debounce(callback, wait = 1500) {
+      let timerId;
+      return (...args) => {
+        clearTimeout(timerId);
+        timerId = setTimeout(() => {
+          callback(...args);
+        }, wait);
+      };
     },
   },
 };

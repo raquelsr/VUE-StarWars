@@ -2,22 +2,24 @@
   <div>
     <h1>People</h1>
     <DataTable
-      :request="request"
+      title="People"
       :headers="headers"
-      @onHandleData="handlePeopleList"
-      :dataHandled="peopleList"
+      @onLoad="getPeople"
+      :data="peopleList"
+      :serverItems="serverItems"
     />
   </div>
 </template>
 <script>
 import DataTable from '@/components/base-components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
+import { HttpService } from '@/services/HttpService.js';
 
 export default {
   name: 'PeopleList',
   data: () => ({
     peopleList: [],
-    request: PeopleService.getAllWithPagination,
+    serverItems: 10,
     headers: [
       { text: 'Name', value: 'name', align: 'start' },
       { text: 'Height', value: 'height' },
@@ -33,18 +35,27 @@ export default {
   },
 
   methods: {
-    async handlePeopleList(data) {
-      // eslint-disable-next-line
-      debugger;
-      for (const person of data.results) {
+    async getPeople(page, search, cancelLoad) {
+      const data = await HttpService.executeRequest(
+        PeopleService.getAllWithPagination,
+        page,
+        search
+      );
+      const handledData = await this.handlePeopleList(data.results);
+      this.peopleList = handledData;
+      this.serverItems = data.count;
+      cancelLoad();
+    },
+
+    async handlePeopleList(people) {
+      for (const person of people) {
         const res = await fetch(person.homeworld);
         const planet = await res.json();
         person.planetName = planet.name;
         person.created = new Date(person.created).toDateString();
         person.edited = new Date(person.edited).toDateString();
       }
-
-      this.peopleList = data;
+      return people;
     },
   },
 };
