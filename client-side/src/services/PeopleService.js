@@ -3,7 +3,11 @@ import { HttpService } from './HttpService';
 export class PeopleService {
   static ENDPOINT = 'people';
 
-  static get(page, service) {
-    return HttpService.get(PeopleService.ENDPOINT, page, service);
+  static getAllWithPagination(page, search) {
+    return HttpService.getAllWithPagination(
+      PeopleService.ENDPOINT,
+      page,
+      search
+    );
   }
 }

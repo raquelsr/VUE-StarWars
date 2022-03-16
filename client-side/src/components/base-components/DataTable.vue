@@ -11,7 +11,6 @@
             label="Search"
             single-line
             hide-details
-            @change="filterByName"
           ></v-text-field>
         </v-card-title>
         <v-data-table
@@ -35,7 +34,7 @@ import { HttpService } from '@/services/HttpService.js';
 
 export default {
   name: 'DataTable',
-  props: ['request', 'headers'],
+  props: ['request', 'headers', 'dataHandled'],
   data: () => ({
     serverItems: 0,
     footerProps: {
@@ -54,20 +53,31 @@ export default {
     data: [],
     search: '',
   }),
-  watch: {},
+  watch: {
+    dataHandled: function () {
+      this.data = this.dataHandled.results;
+    },
+
+    search: function () {
+      this.getData();
+    },
+  },
 
   methods: {
     async getData(page = 1) {
       this.loading = true;
       try {
+        // eslint-disable-next-line
         const data = await HttpService.executeRequest(
           this.request,
           page,
           this.search
         );
+        await this.$emit('onHandleData', data);
+        const data2 = this.dataHandled;
+        this.data = data2.results;
+        this.serverItems = data2.count;
         this.loading = false;
-        this.data = data.results;
-        this.serverItems = data.count;
       } catch (error) {
         this.loading = false;
         console.error(error);
@@ -77,9 +87,6 @@ export default {
       const { page } = pagination;
       this.pagination = pagination;
       this.getData(page);
-    },
-    filterByName() {
-      this.getData();
     },
   },
 };
