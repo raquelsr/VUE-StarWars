@@ -1,37 +1,30 @@
 <template>
   <div>
     <h1>People</h1>
-    <TableComponent2 />
+    <DataTable :request="request" :headers="headers" />
   </div>
 </template>
 <script>
-import TableComponent2 from '@/components/TableComponent2.vue';
+import DataTable from '@/components/base-components/DataTable.vue';
+import { PeopleService } from '@/services/PeopleService.js';
 
 export default {
   name: 'PeopleList',
   data: () => ({
     peopleList: [],
-    error: false,
+    request: PeopleService.get,
+    headers: [
+      { text: 'Name', value: 'name', align: 'start' },
+      { text: 'Height', value: 'height' },
+      { text: 'Mass', value: 'mass' },
+      { text: 'Created', value: 'created' },
+      { text: 'Edited', value: 'edited' },
+      { text: 'Planet name', value: 'planet' },
+    ],
   }),
 
   components: {
-    TableComponent2,
-  },
-
-  methods: {
-    async getPeople() {
-      try {
-        const res = await fetch('https://swapi.dev/api/people');
-        const data = await res.json();
-        this.peopleList = data.results;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  },
-
-  mounted() {
-    this.getPeople();
+    DataTable,
   },
 };
 </script>

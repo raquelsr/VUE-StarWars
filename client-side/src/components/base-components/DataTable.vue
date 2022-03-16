@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <v-app id="inspire">
+  <div>
+    <v-app>
       <v-card>
         <v-card-title>
           People
@@ -31,20 +31,18 @@
 </template>
 
 <script>
+import { HttpService } from '@/services/HttpService.js';
+
 export default {
-  name: 'TableComponent2',
+  name: 'DataTable',
+  props: ['request', 'headers'],
   data: () => ({
-    apiURL: 'https://swapi.dev/api/people',
     serverItems: 0,
     footerProps: {
       itemsPerPageOptions: [10],
       showFirstLastPage: true,
       showCurrentPage: true,
     },
-    headers: [
-      { text: 'Name', value: 'name', align: 'start' },
-      { text: 'Gender', value: 'gender' },
-    ],
     loading: false,
     options: {
       page: 1,
@@ -57,17 +55,16 @@ export default {
     search: '',
   }),
   watch: {},
-  mounted() {
-    this.getData();
-  },
+
   methods: {
-    async getData(numberPage = 1) {
+    async getData(page = 1) {
       this.loading = true;
       try {
-        const res = await fetch(
-          `${this.apiURL}/?page=${numberPage}&search=${this.search}`
+        const data = await HttpService.executeRequest(
+          this.request,
+          page,
+          this.search
         );
-        const data = await res.json();
         this.loading = false;
         this.data = data.results;
         this.serverItems = data.count;
