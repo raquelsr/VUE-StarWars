@@ -22,6 +22,7 @@ import DataTable from '@/components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
 import { HttpService } from '@/services/HttpService.js';
 import DialogComponent from '@/components/DialogComponent.vue';
+import { Cache } from '@/services/Cache.js';
 
 export default {
   name: 'PeopleListView',
@@ -38,11 +39,17 @@ export default {
     ],
     showDialog: false,
     planetDialog: {},
+    cache: [],
   }),
 
   components: {
     DataTable,
     DialogComponent,
+  },
+
+  mounted() {
+    this.cache = Cache.getInstance();
+    this.cache.planetList = [];
   },
 
   methods: {
@@ -60,8 +67,7 @@ export default {
 
     async handlePeopleList(people) {
       for (const person of people) {
-        const res = await fetch(person.homeworld);
-        const planet = await res.json();
+        const planet = await this.getPlanet(person.homeworld);
         person.planetName = planet.name;
         person.created = new Date(person.created).toDateString();
         person.edited = new Date(person.edited).toDateString();
@@ -69,10 +75,25 @@ export default {
       return people;
     },
 
-    async showPlanetInfo(planet) {
-      const res = await fetch(planet);
-      const planetInfo = await res.json();
-      console.log(planetInfo);
+    async getPlanet(url) {
+      let planet = this.cache.planetList.find((planet) => planet.url === url);
+      if (!planet) {
+        try {
+          //TODO
+          const res = await fetch(url);
+          planet = await res.json();
+          this.cache.planetList.push(planet);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      return planet;
+    },
+
+    async showPlanetInfo(planetUrl) {
+      const planetInfo = this.cache.planetList.find(
+        (planet) => planet.url === planetUrl
+      );
       this.showDialog = true;
       this.planetDialog = {
         name: planetInfo.name,

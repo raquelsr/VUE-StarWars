@@ -112,9 +112,8 @@ export default {
       };
     },
 
-    clickPlanet(planet) {
-      console.log('Clicked', planet);
-      this.$emit('onClickPlanet', planet);
+    clickPlanet(planetUrl) {
+      this.$emit('onClickPlanet', planetUrl);
     },
   },
 };
