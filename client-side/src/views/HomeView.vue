@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <PeopleList />
+    <PeopleListView />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import PeopleList from '@/components/PeopleList.vue';
+import PeopleListView from '@/views/PeopleListView.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    PeopleList,
+    PeopleListView,
   },
 };
 </script>

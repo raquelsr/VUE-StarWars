@@ -11,12 +11,12 @@
   </div>
 </template>
 <script>
-import DataTable from '@/components/base-components/DataTable.vue';
+import DataTable from '@/components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
 import { HttpService } from '@/services/HttpService.js';
 
 export default {
-  name: 'PeopleList',
+  name: 'PeopleListView',
   data: () => ({
     peopleList: [],
     serverItems: 10,
