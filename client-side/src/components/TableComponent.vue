@@ -4,13 +4,25 @@
       <div>
         <v-data-table
           :headers="headers"
-          :items="desserts"
-          :items-per-page="-1"
+          :items="data"
+          :page.sync="page"
+          :items-per-page="10"
+          @page-count="prueba"
           :options.sync="options"
           :server-items-length="10"
           :loading="loading"
+          hide-default-footer
           class="elevation-1"
         ></v-data-table>
+      </div>
+      <div class="text-center pt-2">
+        <v-pagination
+          v-model="page"
+          :length="pageCount"
+          :total-visible="5"
+          :next="prueba"
+          circle
+        ></v-pagination>
       </div>
     </v-app>
   </div>
@@ -22,8 +34,9 @@ export default {
 
   data() {
     return {
-      totalDesserts: 0,
-      desserts: [],
+      page: 1,
+      pageCount: 0,
+      data: [],
       loading: true,
       options: {},
       headers: [
@@ -50,6 +63,10 @@ export default {
     },
   },
   methods: {
+    prueba() {
+      alert('Cambio pagina');
+    },
+
     async getDataFromApi() {
       this.loading = true;
       // this.fakeApiCall().then((data) => {
@@ -58,8 +75,8 @@ export default {
       //   this.loading = false;
       // });
       const des = await this.getDesserts();
-      this.desserts = des.results;
-      this.totalDesserts = 10;
+      this.data = des.results;
+      this.pageCount = Math.ceil(des.count / 10);
       this.loading = false;
     },
     /**

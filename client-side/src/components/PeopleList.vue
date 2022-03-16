@@ -1,11 +1,11 @@
 <template>
   <div>
     <h1>People</h1>
-    <TableComponent :data="peopleList" />
+    <TableComponent2 />
   </div>
 </template>
 <script>
-import TableComponent from '@/components/TableComponent.vue';
+import TableComponent2 from '@/components/TableComponent2.vue';
 
 export default {
   name: 'PeopleList',
@@ -15,7 +15,7 @@ export default {
   }),
 
   components: {
-    TableComponent,
+    TableComponent2,
   },
 
   methods: {
