@@ -1,11 +1,7 @@
 <template>
   <v-row justify="space-around">
     <v-col cols="auto">
-      <v-dialog
-        transition="dialog-bottom-transition"
-        max-width="600"
-        v-model="show"
-      >
+      <v-dialog transition="dialog-bottom-transition" v-model="show">
         <template v-slot:default="dialog">
           <v-card>
             <v-toolbar color="primary" dark>
@@ -17,11 +13,9 @@
             </v-toolbar>
             <v-card-text>
               <div class="text-h2 pa-12">
-                <ul>
-                  <li v-for="keyValue in handledInfo.keys()" :key="keyValue">
-                    {{ keyValue }} : {{ handledInfo.get(keyValue) }}
-                  </li>
-                </ul>
+                <div v-for="keyValue in handledInfo.keys()" :key="keyValue">
+                  <p>{{ keyValue }} : {{ handledInfo.get(keyValue) }}</p>
+                </div>
               </div>
             </v-card-text>
           </v-card>

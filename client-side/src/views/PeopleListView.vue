@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>People</h1>
+    <img alt="StarWars logo" src="../assets/logo.png" />
     <DialogComponent
       :title="planetDialog.name"
       :info="planetDialog"
@@ -85,4 +85,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+img {
+  width: 200px;
+}
+</style>
