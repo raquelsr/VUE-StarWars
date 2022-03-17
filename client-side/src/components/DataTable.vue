@@ -3,7 +3,7 @@
     <v-app>
       <v-card>
         <v-card-title>
-          {{ title }}
+          <h2 class="text-uppercase text-center text-h3">{{ title }}</h2>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -16,23 +16,25 @@
           :headers="headers"
           :items="data"
           :loading="loading"
+          :loader-height="10"
+          :loading-text="'Loading...'"
           :options.sync="options"
           :server-items-length="serverItems"
           :footer-props="footerProps"
           :search="search"
           @pagination="updatePage"
           :page.sync="page"
+          class="data-table"
         >
           <template v-slot:[`item.planetName`]="{ item }">
             <v-btn
-              color="blue-grey"
-              class="ma-2 white--text"
+              color="dark"
               outlined
               @click="clickPlanetButton(item.homeworld)"
               x-small
+              min-width="100"
             >
               {{ item.planetName }}
-
               <v-icon right dark> mdi-open-in-new</v-icon>
             </v-btn>
           </template>

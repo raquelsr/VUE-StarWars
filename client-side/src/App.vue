@@ -10,6 +10,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-image: url('./assets/background.jpeg');
+  background-color: #000;
+  background-repeat: repeat;
   color: #2c3e50;
 }
 </style>

@@ -14,6 +14,7 @@
       :data="peopleList"
       :serverItems="serverItems"
       @onClickPlanetButton="showPlanetInfo"
+      class="people-list__table"
     />
   </div>
 </template>
@@ -99,7 +100,7 @@ export default {
       const { name, diameter, climate, population } = planet;
       this.planetInfo = {
         name,
-        diameter,
+        diameter: `${diameter} km`,
         climate,
         population,
       };
@@ -110,6 +111,10 @@ export default {
 
 <style scoped>
 img {
-  width: 200px;
+  width: 30%;
+}
+
+.people-list__table {
+  margin: 0 6%;
 }
 </style>

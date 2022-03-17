@@ -1,28 +1,33 @@
 <template>
-  <v-row justify="space-around">
-    <v-col cols="auto">
-      <v-dialog transition="dialog-bottom-transition" v-model="show">
-        <template v-slot:default="dialog">
-          <v-card>
-            <v-toolbar color="primary" dark>
-              <v-toolbar-title>{{ title }} </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon dark @click="dialog.value = false">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <div class="text-h2 pa-12">
-                <div v-for="keyValue in handledInfo.keys()" :key="keyValue">
-                  <p>{{ keyValue }} : {{ handledInfo.get(keyValue) }}</p>
-                </div>
-              </div>
-            </v-card-text>
-          </v-card>
-        </template>
-      </v-dialog>
-    </v-col>
-  </v-row>
+  <v-dialog
+    transition="dialog-bottom-transition"
+    v-model="show"
+    :max-width="400"
+  >
+    <template v-slot:default="dialog">
+      <v-card>
+        <v-toolbar color="primary" class="toolbar">
+          <v-toolbar-title class="text-h4 black--text text-uppercase"
+            >{{ title }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog.value = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <div class="text-body-1 ma-12 text-left black--text">
+            <div v-for="keyValue in handledInfo.keys()" :key="keyValue">
+              <p>
+                <strong class="text-uppercase">{{ keyValue }} :</strong>
+                {{ handledInfo.get(keyValue) }}
+              </p>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </template>
+  </v-dialog>
 </template>
 
 <script>
