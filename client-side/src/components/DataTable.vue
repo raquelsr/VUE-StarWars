@@ -6,7 +6,7 @@
           <v-checkbox
             v-model="isSorted"
             :label="'Activate sort'"
-            class="black--text text-center justify-center"
+            class="black--text"
           ></v-checkbox>
         </div>
         <v-card-title>

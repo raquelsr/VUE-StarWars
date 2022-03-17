@@ -11,7 +11,7 @@ export class HttpService {
     return fetch(url);
   }
 
-  static fetch(url) {
+  static getByUrl(url) {
     return fetch(url);
   }
 

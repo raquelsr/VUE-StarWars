@@ -1,7 +1,7 @@
+import PageNotFound from '../views/PageNotFound.vue';
+import PeopleListView from '../views/PeopleListView.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import PeopleListView from '../views/PeopleListView.vue';
-import PageNotFound from '../views/PageNotFound.vue';
 
 Vue.use(VueRouter);
 

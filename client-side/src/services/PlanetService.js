@@ -1,7 +1,7 @@
 import { HttpService } from './HttpService.js';
 
 export class PlanetService {
-  static ENDPOINT = 'people';
+  static ENDPOINT = 'planets';
 
   static async getPlanetByUrl(url) {
     let planet = HttpService.cache.planetList.find(
@@ -9,7 +9,7 @@ export class PlanetService {
     );
     if (!planet) {
       try {
-        planet = await HttpService.executeRequest(HttpService.fetch, url);
+        planet = await HttpService.executeRequest(HttpService.getByUrl, url);
         HttpService.cache.planetList.push(planet);
       } catch (e) {
         console.error(e);
