@@ -62,7 +62,6 @@ export default {
         for (const field in this.info) {
           map.set(field, this.info[field]);
         }
-        console.log(map);
         return map;
       },
     },

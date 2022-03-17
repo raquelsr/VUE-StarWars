@@ -2,8 +2,8 @@
   <div>
     <img alt="StarWars logo" src="../assets/logo.png" />
     <DialogComponent
-      :title="planetDialog.name"
-      :info="planetDialog"
+      :title="planetInfo.name"
+      :info="planetInfo"
       :showDialog="showDialog"
       v-model="showDialog"
     />
@@ -13,10 +13,11 @@
       @onLoad="getPeople"
       :data="peopleList"
       :serverItems="serverItems"
-      @onClickPlanet="showPlanetInfo"
+      @onClickPlanetButton="showPlanetInfo"
     />
   </div>
 </template>
+
 <script>
 import DataTable from '@/components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
@@ -38,7 +39,7 @@ export default {
       { text: 'Planet name', value: 'planetName' },
     ],
     showDialog: false,
-    planetDialog: {},
+    planetInfo: {},
     cache: [],
   }),
 
@@ -91,15 +92,16 @@ export default {
     },
 
     async showPlanetInfo(planetUrl) {
-      const planetInfo = this.cache.planetList.find(
+      const planet = this.cache.planetList.find(
         (planet) => planet.url === planetUrl
       );
       this.showDialog = true;
-      this.planetDialog = {
-        name: planetInfo.name,
-        diameter: planetInfo.diameter,
-        climate: planetInfo.climate,
-        population: planetInfo.population,
+      const { name, diameter, climate, population } = planet;
+      this.planetInfo = {
+        name,
+        diameter,
+        climate,
+        population,
       };
     },
   },

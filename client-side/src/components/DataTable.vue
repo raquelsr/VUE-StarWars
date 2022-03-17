@@ -28,7 +28,7 @@
               color="blue-grey"
               class="ma-2 white--text"
               outlined
-              @click="clickPlanet(item.homeworld)"
+              @click="clickPlanetButton(item.homeworld)"
               x-small
             >
               {{ item.planetName }}
@@ -69,10 +69,10 @@ export default {
   }),
 
   watch: {
-    search: function () {
+    search: function (newValue) {
       this.debounce(() => {
         this.page = 1;
-        this.getData();
+        if (newValue === this.search) this.getData();
       })();
     },
   },
@@ -94,7 +94,6 @@ export default {
     },
 
     updatePage(pagination) {
-      console.log();
       if (this.pagination.page != pagination.page) {
         const { page } = pagination;
         this.pagination = pagination;
@@ -112,8 +111,8 @@ export default {
       };
     },
 
-    clickPlanet(planetUrl) {
-      this.$emit('onClickPlanet', planetUrl);
+    clickPlanetButton(planetUrl) {
+      this.$emit('onClickPlanetButton', planetUrl);
     },
   },
 };
