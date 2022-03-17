@@ -98,11 +98,16 @@ export default {
       );
       this.showDialog = true;
       const { name, diameter, climate, population } = planet;
+      // eslint-disable-next-line
+      debugger;
       this.planetInfo = {
         name,
-        diameter: `${diameter} km`,
+        diameter: Number(diameter).toLocaleString('en-EN', {
+          style: 'unit',
+          unit: 'kilometer',
+        }),
         climate,
-        population,
+        population: Number(population).toLocaleString(),
       };
     },
   },

@@ -2,6 +2,13 @@
   <div>
     <v-app>
       <v-card>
+        <div class="checkbox">
+          <v-checkbox
+            v-model="isSorted"
+            :label="'Activate sort'"
+            class="black--text text-center justify-center"
+          ></v-checkbox>
+        </div>
         <v-card-title>
           <h2 class="text-uppercase text-center text-h3">{{ title }}</h2>
           <v-spacer></v-spacer>
@@ -14,17 +21,18 @@
         </v-card-title>
         <v-data-table
           :headers="headers"
-          :items="data"
+          :items="isSorted ? sortedData : data"
           :loading="loading"
           :loader-height="10"
           :loading-text="'Loading...'"
-          :options.sync="options"
+          :options="options"
           :server-items-length="serverItems"
           :footer-props="footerProps"
           :search="search"
           @pagination="updatePage"
           :page.sync="page"
           class="data-table"
+          @update:options="customSort"
         >
           <template v-slot:[`item.planetName`]="{ item }">
             <v-btn
@@ -61,14 +69,31 @@ export default {
       showCurrentPage: true,
     },
     options: {
-      // TODO
       sortBy: ['name'],
       sortDesc: [true],
     },
     pagination: {},
     page: 1,
+    isSorted: false,
+    customSortLaunched: false,
     search: '',
   }),
+
+  computed: {
+    sortedData: {
+      get() {
+        const field = this.options.sortBy;
+        const copiedData = this.data;
+        return copiedData.sort((a, b) => {
+          let modifier = 1;
+          if (this.options.sortDesc != 'false') modifier = -1;
+          if (a[field] < b[field]) return -1 * modifier;
+          if (a[field] > b[field]) return 1 * modifier;
+          return 0;
+        });
+      },
+    },
+  },
 
   watch: {
     search: function (newValue) {
@@ -77,6 +102,19 @@ export default {
         if (newValue === this.search) this.getData();
       })();
     },
+
+    isSorted: function (isSorted) {
+      if (!isSorted) {
+        this.options = {};
+      } else {
+        this.options.sortBy = 'name';
+        this.options.sortDesc = true;
+      }
+    },
+  },
+
+  updated() {
+    this.customSortLaunched = false;
   },
 
   methods: {
@@ -96,7 +134,7 @@ export default {
     },
 
     updatePage(pagination) {
-      if (this.pagination.page != pagination.page) {
+      if (this.pagination.page != pagination.page && !this.customSortLaunched) {
         const { page } = pagination;
         this.pagination = pagination;
         this.getData(page);
@@ -116,6 +154,22 @@ export default {
     clickPlanetButton(planetUrl) {
       this.$emit('onClickPlanetButton', planetUrl);
     },
+
+    customSort(options) {
+      if (this.options.sortBy !== options.sortBy && this.isSorted) {
+        this.customSortLaunched = true;
+      }
+      this.options.sortBy = options.sortBy;
+      this.options.sortDesc = options.sortDesc;
+    },
   },
 };
 </script>
+
+<style scoped>
+.checkbox {
+  display: flex;
+  justify-content: center;
+  height: 30px;
+}
+</style>
