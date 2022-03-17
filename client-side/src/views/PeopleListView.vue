@@ -2,56 +2,50 @@
   <div>
     <img alt="StarWars logo" src="../assets/logo.png" />
     <DialogComponent
+      v-model="showDialog"
       :title="planetInfo.name"
       :info="planetInfo"
       :showDialog="showDialog"
-      v-model="showDialog"
     />
     <DataTable
       title="People"
       :headers="headers"
-      @onLoad="getPeople"
       :data="peopleList"
       :serverItems="serverItems"
-      @onClickPlanetButton="showPlanetInfo"
+      @onClickButton="showPlanetInfo"
+      @onLoad="getPeople"
       class="people-list__table"
     />
   </div>
 </template>
 
 <script>
-import DataTable from '@/components/DataTable.vue';
+import { HttpService } from '@/services/HttpService.js';
 import { PeopleService } from '@/services/PeopleService.js';
 import { PlanetService } from '@/services/PlanetService.js';
-import { HttpService } from '@/services/HttpService.js';
+import DataTable from '@/components/DataTable.vue';
 import DialogComponent from '@/components/DialogComponent.vue';
-import { Cache } from '@/services/Cache.js';
 
 export default {
   name: 'PeopleListView',
   data: () => ({
-    peopleList: [],
-    serverItems: 10,
     headers: [
       { text: 'Name', value: 'name', align: 'start' },
       { text: 'Height (cm)', value: 'height' },
       { text: 'Mass (kg)', value: 'mass' },
-      { text: 'Created', value: 'created' },
-      { text: 'Edited', value: 'edited' },
-      { text: 'Planet name', value: 'planetName' },
+      { text: 'Created', value: 'createdString' },
+      { text: 'Edited', value: 'editedString' },
+      { text: 'Planet name', value: 'buttonValue' },
     ],
+    serverItems: 10,
     showDialog: false,
+    peopleList: [],
     planetInfo: {},
-    cache: [],
   }),
 
   components: {
     DataTable,
     DialogComponent,
-  },
-
-  mounted() {
-    this.cache = Cache.getInstance();
   },
 
   methods: {
@@ -70,16 +64,16 @@ export default {
     async handlePeopleList(people) {
       for (const person of people) {
         const planet = await PlanetService.getPlanetByUrl(person.homeworld);
-        person.planetName = planet.name;
-        person.created = new Date(person.created).toDateString();
-        person.edited = new Date(person.edited).toDateString();
+        person.buttonValue = planet.name;
+        person.createdString = new Date(person.created).toDateString();
+        person.editedString = new Date(person.edited).toDateString();
       }
       return people;
     },
 
-    showPlanetInfo(planetUrl) {
-      const planet = this.cache.planetList.find(
-        (planet) => planet.url === planetUrl
+    showPlanetInfo(planetName) {
+      const planet = HttpService.cache.planetList.find(
+        (planet) => planet.name === planetName
       );
       this.showDialog = true;
       const { name, diameter, climate, population } = planet;

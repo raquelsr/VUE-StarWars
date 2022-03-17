@@ -26,23 +26,22 @@
           :loader-height="10"
           :loading-text="'Loading...'"
           :options="options"
+          :page.sync="page"
+          :search="search"
           :server-items-length="serverItems"
           :footer-props="footerProps"
-          :search="search"
           @pagination="updatePage"
-          :page.sync="page"
-          class="data-table"
           @update:options="customSort"
         >
-          <template v-slot:[`item.planetName`]="{ item }">
+          <template v-slot:[`item.buttonValue`]="{ item }">
             <v-btn
               color="dark"
-              outlined
-              @click="clickPlanetButton(item.homeworld)"
-              x-small
               min-width="100"
+              outlined
+              x-small
+              @click="clickButton(item.buttonValue)"
             >
-              {{ item.planetName }}
+              {{ item.buttonValue }}
               <v-icon right dark> mdi-open-in-new</v-icon>
             </v-btn>
           </template>
@@ -56,26 +55,26 @@
 export default {
   name: 'DataTable',
   props: {
-    title: String,
-    headers: Array,
     data: Array,
+    headers: Array,
     serverItems: Number,
+    title: String,
   },
   data: () => ({
-    loading: false,
+    customSortLaunched: false,
+    isSorted: false,
     footerProps: {
       itemsPerPageOptions: [10],
       showFirstLastPage: true,
       showCurrentPage: true,
     },
+    loading: false,
     options: {
       sortBy: ['name'],
       sortDesc: [true],
     },
-    pagination: {},
     page: 1,
-    isSorted: false,
-    customSortLaunched: false,
+    pagination: {},
     search: '',
   }),
 
@@ -101,15 +100,6 @@ export default {
         this.page = 1;
         if (newValue === this.search) this.getData();
       })();
-    },
-
-    isSorted: function (isSorted) {
-      if (!isSorted) {
-        this.options = {};
-      } else {
-        this.options.sortBy = 'name';
-        this.options.sortDesc = true;
-      }
     },
   },
 
@@ -151,8 +141,8 @@ export default {
       };
     },
 
-    clickPlanetButton(planetUrl) {
-      this.$emit('onClickPlanetButton', planetUrl);
+    clickButton(event) {
+      this.$emit('onClickButton', event);
     },
 
     customSort(options) {
@@ -171,5 +161,15 @@ export default {
   display: flex;
   justify-content: center;
   height: 30px;
+}
+
+::v-deep .v-data-table-header .text-start {
+  font-size: 16px;
+}
+
+::v-deep .v-data-footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 16px;
 }
 </style>

@@ -7,8 +7,8 @@
     <template v-slot:default="dialog">
       <v-card>
         <v-toolbar color="primary" class="toolbar">
-          <v-toolbar-title class="text-h4 black--text text-uppercase"
-            >{{ title }}
+          <v-toolbar-title class="text-h4 black--text text-uppercase">
+            {{ title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialog.value = false">
@@ -34,12 +34,12 @@
 export default {
   name: 'DialogComponent',
   props: {
-    title: String,
     info: Object,
     showDialog: {
       type: Boolean,
       default: false,
     },
+    title: String,
   },
   data: () => ({
     dialog: false,
