@@ -1,5 +1,9 @@
+import { Cache } from './Cache.js';
+
 export class HttpService {
   static #URL = 'https://swapi.dev/api/';
+
+  static cache = Cache.getInstance();
 
   static getAllWithPagination(endpoint, page = 1, search) {
     let url = `${HttpService.#URL}/${endpoint}/?page=${page}`;
@@ -7,8 +11,8 @@ export class HttpService {
     return fetch(url);
   }
 
-  static get(endpoint, id) {
-    return fetch(`${HttpService.#URL}/${endpoint}/${id}`);
+  static fetch(url) {
+    return fetch(url);
   }
 
   static async executeRequest(request, ...params) {

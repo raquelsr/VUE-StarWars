@@ -22,6 +22,7 @@
 <script>
 import DataTable from '@/components/DataTable.vue';
 import { PeopleService } from '@/services/PeopleService.js';
+import { PlanetService } from '@/services/PlanetService.js';
 import { HttpService } from '@/services/HttpService.js';
 import DialogComponent from '@/components/DialogComponent.vue';
 import { Cache } from '@/services/Cache.js';
@@ -51,7 +52,6 @@ export default {
 
   mounted() {
     this.cache = Cache.getInstance();
-    this.cache.planetList = [];
   },
 
   methods: {
@@ -69,7 +69,7 @@ export default {
 
     async handlePeopleList(people) {
       for (const person of people) {
-        const planet = await this.getPlanet(person.homeworld);
+        const planet = await PlanetService.getPlanetByUrl(person.homeworld);
         person.planetName = planet.name;
         person.created = new Date(person.created).toDateString();
         person.edited = new Date(person.edited).toDateString();
@@ -77,29 +77,12 @@ export default {
       return people;
     },
 
-    async getPlanet(url) {
-      let planet = this.cache.planetList.find((planet) => planet.url === url);
-      if (!planet) {
-        try {
-          //TODO
-          const res = await fetch(url);
-          planet = await res.json();
-          this.cache.planetList.push(planet);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-      return planet;
-    },
-
-    async showPlanetInfo(planetUrl) {
+    showPlanetInfo(planetUrl) {
       const planet = this.cache.planetList.find(
         (planet) => planet.url === planetUrl
       );
       this.showDialog = true;
       const { name, diameter, climate, population } = planet;
-      // eslint-disable-next-line
-      debugger;
       this.planetInfo = {
         name,
         diameter: Number(diameter).toLocaleString('en-EN', {

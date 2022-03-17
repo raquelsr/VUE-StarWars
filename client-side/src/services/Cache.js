@@ -2,7 +2,9 @@ export const Cache = (function () {
   let instance;
 
   function createInstance() {
-    return {};
+    return {
+      planetList: [],
+    };
   }
 
   return {
