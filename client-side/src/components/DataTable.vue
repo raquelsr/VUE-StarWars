@@ -169,7 +169,7 @@ export default {
 
 ::v-deep .v-data-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   font-size: 16px;
 }
 </style>
