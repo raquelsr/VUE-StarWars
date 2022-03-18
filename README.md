@@ -6,8 +6,9 @@ Developed with:
 - Vue 2
 - Vuetify
 
-- ### CLIENT SIDE / FRONT-END
-  To run it, we must launch the following commands inside the folder:
+### CLIENT SIDE / FRONT-END
+
+To run it, we must launch the following commands inside the folder:
 
 ```sh
 $ cd client-side
