@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 img {
-  width: 30%;
+  width: 400px;
 }
 
 .people-list__table {
